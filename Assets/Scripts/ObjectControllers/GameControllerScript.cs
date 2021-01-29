@@ -1,8 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
-
+using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class GameControllerScript : MonoBehaviour
 {
@@ -11,10 +10,10 @@ public class GameControllerScript : MonoBehaviour
         Keyboard,
         Touch
     }
-    public Button startBtn;
-    public Button leftBtn;
-    public Button rightBtn;
+
+    public GameObject mainCamera;
     public GameObject paths;
+    public GameObject pauseMenu;
     public ControlType controlType;
     public float playerSpeed;
     public float playerTurnSpeed;
@@ -25,13 +24,14 @@ public class GameControllerScript : MonoBehaviour
     private GameObject player;
     private PlayerScript playerScript;
     private IControlScheme controls;
+    private Button startBtn;
 
     // Start is called before the first frame update
     void StartGame()
     {
         print("Starting the game now!");
         startBtn.interactable = false;
-        startBtn.gameObject.SetActive(false);
+        //startBtn.gameObject.SetActive(false);
         playerScript.Play();
     }
 
@@ -67,6 +67,7 @@ public class GameControllerScript : MonoBehaviour
         SetParams();
 
         //Implement "Start on Touch" functionality
+        startBtn = mainCamera.transform.GetChild(0).GetChild(0).GetChild(0).gameObject.GetComponent<Button>();
         startBtn.onClick.AddListener(StartGame);
     }
 
@@ -75,8 +76,7 @@ public class GameControllerScript : MonoBehaviour
         currentPath = paths.transform.GetChild(currentPathIndex);
         player = currentPath.GetChild(0).GetChild(0).gameObject;
         playerScript = player.GetComponent<PlayerScript>();
-        player.GetComponent<SphereCollider>();
-
+        playerScript.IsPlayer = true;
     }
 
     // Update is called once per frame
@@ -85,54 +85,94 @@ public class GameControllerScript : MonoBehaviour
         //Input controls
         if (controls.GetLeftDown())
         {
-            playerScript.TriggerLeft(true);
+            playerScript.TurnLeft(true);
         }
-        else if (controls.GetLeftUp())
+        if (controls.GetLeftUp())
         {
-            playerScript.TriggerLeft(true);
+            playerScript.StopLeft(true);
         }
         if (controls.GetRightDown())
         {
-            playerScript.TriggerRight(true);
+            playerScript.TurnRight(true);
         }
-        else if (controls.GetRightUp())
+        if (controls.GetRightUp())
         {
-            playerScript.TriggerRight(true);
+            playerScript.StopRight(true);
+        }
+        if (controls.GetPause())
+        {
+            playerScript.Pause();
+            DisplayMenu();
         }
     }
 
     public void CompletePath()
     {
-        if(currentPathIndex < pathCount - 1) //Finished the current path but there are more
+        if (currentPathIndex < pathCount - 1) //Finished the current path but there are more
         {
+            print("Completed path: " + currentPath.ToString());
             //Handle last played car
-            player.GetComponent<SphereCollider>().gameObject.SetActive(false); //Disable sphere collider to stop collision with end markers
-            currentPath.GetChild(1).gameObject.SetActive(false); //Disable end marker for the completed path
-            playerScript.IsPlayer = false;
-            playerScript.IsGhost = true;
+            MakeGhost();
             //move to next path
             currentPathIndex++;
-            currentPath = paths.transform.GetChild(currentPathIndex);
+            SetParams();
             currentPath.gameObject.SetActive(true);
-            player = currentPath.GetChild(0).GetChild(0).gameObject;
-            playerScript = player.GetComponent<PlayerScript>();
-            startBtn.interactable = true;
-            startBtn.gameObject.SetActive(true);
+            ResetPath();
         }
         else //Finished the level
         {
-
+            MakeGhost();
+            ResetPath();
+            StartCoroutine(EndOfLevelReplay());
         }
     }
 
     public void ResetPath()
     {
         print("Resetting path for new attempt");
-        foreach(Transform path in paths.transform)
+        foreach (Transform path in paths.transform)
         {
             path.GetChild(0).GetChild(0).GetComponent<PlayerScript>().Reset();
         }
         startBtn.interactable = true;
-        startBtn.gameObject.SetActive(true);
+        //startBtn.gameObject.SetActive(true);
+    }
+
+    void MakeGhost()
+    {
+        player.GetComponent<SphereCollider>().enabled = false; //Disable sphere collider to stop collision with end markers
+                                                               //! Destroy collision script to ignore collisions between ghosts or a ghost and end marker
+                                                               //! This might need to change if reset level is implemented or the script needs to get attached again to all paths before current during reset
+        Destroy(player.GetComponent<CarCollisionScript>());
+        currentPath.GetChild(1).gameObject.SetActive(false); //Disable end marker for the completed path
+        player.transform.GetChild(0).gameObject.SetActive(false); //Disable lights for ghosts
+                                                                  //Make ghosts more ghost like
+        foreach (Material mat in player.GetComponent<MeshRenderer>().materials)
+        {
+            mat.color = new Color(mat.color.r, mat.color.g, mat.color.b, 0.8f);
+        }
+        playerScript.IsPlayer = false;
+        playerScript.IsGhost = true;
+    }
+
+    IEnumerator EndOfLevelReplay()
+    {
+        while (true)
+        {
+            playerScript.Play();
+            yield return new WaitForSeconds(5); //Duration of replay
+            ResetPath();
+        }
+    }
+
+    void nextScene()
+    {
+        //Scene Animation
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1); //Load next scene
+    }
+
+    void DisplayMenu()
+    {
+        pauseMenu.SetActive(true);
     }
 }

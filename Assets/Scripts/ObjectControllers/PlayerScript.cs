@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class PlayerScript : MonoBehaviour
 {
@@ -22,6 +20,14 @@ public class PlayerScript : MonoBehaviour
     public bool IsPlayer { get => isPlayer; set => isPlayer = value; }
     public bool IsGhost { get => isGhost; set => isGhost = value; }
 
+    private void Awake()
+    {
+        foreach (Material mat in gameObject.GetComponent<MeshRenderer>().materials)
+        {
+            mat.SetInt("_ZWrite", 1);
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -29,7 +35,7 @@ public class PlayerScript : MonoBehaviour
         play = false;
         leftTurn = false;
         rightTurn = false;
-        isPlayer = true;
+        isPlayer = false;
         movable = true;
         gameControllerScript = GameObject.Find("GameSettings").GetComponent<GameControllerScript>();
         savedPositions = new List<Tuple<Vector3, Quaternion>>();
@@ -38,7 +44,7 @@ public class PlayerScript : MonoBehaviour
 
         //adjust speed calculation formula if needed
         adjustedSpeed = gameControllerScript.playerSpeed / 10f;
-        adjustedRotationSpeed = gameControllerScript.playerTurnSpeed / 10f;
+        adjustedRotationSpeed = gameControllerScript.playerTurnSpeed * 10f;
 
         //DEBUG
         /*print("Speed: " + canvasScript.playerSpeed.ToString());
@@ -63,7 +69,8 @@ public class PlayerScript : MonoBehaviour
             }
 
             transform.Translate(new Vector3(0, 0, adjustedSpeed) * Time.deltaTime * (movable ? 1 : 0));
-            transform.Rotate(0, rotationAmount, 0);
+            transform.Rotate(0, rotationAmount * Time.deltaTime, 0);
+            print("Total rotation: " + (rotationAmount * Time.deltaTime).ToString("0.000000"));
         }
     }
 
@@ -83,26 +90,48 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
-    public void TriggerLeft(bool record)
+    public void TurnLeft(bool record)
     {
         float time = Time.time;
         if (record)
         {
-            savedControls.Add(new UserInput(UserInput.Direction.left, lastActionTime - time));
+            savedControls.Add(new UserInput("TurnLeft", lastActionTime - time));
             lastActionTime = time;
         }
-        leftTurn = !leftTurn;
+        leftTurn = true;
     }
 
-    public void TriggerRight(bool record)
+    public void StopLeft(bool record)
     {
         float time = Time.time;
         if (record)
         {
-            savedControls.Add(new UserInput(UserInput.Direction.right, lastActionTime - time));
+            savedControls.Add(new UserInput("StopLeft", lastActionTime - time));
             lastActionTime = time;
         }
-        rightTurn = !rightTurn;
+        leftTurn = false;
+    }
+
+    public void TurnRight(bool record)
+    {
+        float time = Time.time;
+        if (record)
+        {
+            savedControls.Add(new UserInput("TurnRight", lastActionTime - time));
+            lastActionTime = time;
+        }
+        rightTurn = true;
+    }
+
+    public void StopRight(bool record)
+    {
+        float time = Time.time;
+        if (record)
+        {
+            savedControls.Add(new UserInput("StopRight", lastActionTime - time));
+            lastActionTime = time;
+        }
+        rightTurn = false;
     }
 
     public void Play()

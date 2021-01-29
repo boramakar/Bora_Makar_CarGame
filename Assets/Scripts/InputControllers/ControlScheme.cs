@@ -7,4 +7,5 @@ interface IControlScheme
     bool GetLeftUp();
     bool GetRightDown();
     bool GetRightUp();
+    bool GetPause();
 }

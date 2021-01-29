@@ -70,5 +70,10 @@ public class TouchControls : IControlScheme
             return false;
         }
     }
+
+    public bool GetPause()
+    {
+        return false;
+    }
 }
 

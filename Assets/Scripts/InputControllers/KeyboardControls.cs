@@ -38,4 +38,9 @@ public class KeyboardControls : IControlScheme
         else
             return false;
     }
+
+    public bool GetPause()
+    {
+        return false;
+    }
 }

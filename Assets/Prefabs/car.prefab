@@ -134,11 +134,11 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1135533528220324527}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.25
-  m_Center: {x: 0, y: -1, z: 0}
+  m_Radius: 0.15
+  m_Center: {x: 0, y: -1.1, z: 0}
 --- !u!65 &-5619408881905697474
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -150,8 +150,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.6688336, y: 0.7364595, z: 1.2193434}
-  m_Center: {x: 0.00076813996, y: 0.3692296, z: -0.00010022521}
+  m_Size: {x: 0.60966957, y: 0.7364595, z: 1.1154475}
+  m_Center: {x: 0.0066845417, y: 0.3692296, z: 0.016349316}
 --- !u!54 &4046954209004356996
 Rigidbody:
   m_ObjectHideFlags: 0
