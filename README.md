@@ -11,6 +11,7 @@ This project is done as a job interview for MobGe. Time limit was 5 days. Meant 
     - End marker model
   - Path Prefab
   - Camera/Canvas Prefab
+  - Materials
   
 - MOVEMENT
   - Keyboard inputs
@@ -44,3 +45,23 @@ This project is done as a job interview for MobGe. Time limit was 5 days. Meant 
 - PARTICLES
   - Car crash
 - LEVEL STATS (Completion time, attempt/crash count, etc.)
+
+### DAY 2
+#### COMPLETED
+- PAST CARS
+  - Method 1
+  
+- COLLISION
+  - Obstacle collision
+  - End marker collision
+  - Collision marker for identifying the object player collided with
+
+#### FIXED
+- LEVELS
+  - Rearranged the level design to better fit the camera size
+  - Moved camera further from flooe for better lighting of collision marker
+  - Moved game controller script from canvas to a separate object
+  
+#### BUGS
+- MOVEMENT
+  - Last rotation applied when hitting the end marker is carried over to the new car as default rotation
