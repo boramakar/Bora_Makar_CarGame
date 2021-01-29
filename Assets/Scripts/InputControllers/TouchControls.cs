@@ -1,10 +1,11 @@
 ﻿using System;
 using UnityEngine;
 
-public class TouchControls : ControlScheme
+public class TouchControls : IControlScheme
 {
     public TouchControls()
     {
+        //nothing to do here yet
     }
     public bool GetLeftDown()
     {

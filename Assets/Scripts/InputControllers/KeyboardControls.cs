@@ -1,9 +1,10 @@
 ﻿using System;
 using UnityEngine;
 
-public class KeyboardControls : ControlScheme
+public class KeyboardControls : IControlScheme
 {
-    private KeyCode leftKey, rightKey;
+    private readonly KeyCode leftKey, rightKey;
+
     public KeyboardControls()
     {
         leftKey = KeyCode.LeftArrow;

@@ -24,29 +24,15 @@ public class GameControllerScript : MonoBehaviour
     private Transform currentPath;
     private GameObject player;
     private PlayerScript playerScript;
-    private ControlScheme controls;
-    private ArrayList inputArray;
+    private IControlScheme controls;
 
     // Start is called before the first frame update
-    void startGame()
+    void StartGame()
     {
         print("Starting the game now!");
         startBtn.interactable = false;
         startBtn.gameObject.SetActive(false);
         playerScript.Play();
-    }
-    public void LeftTurn(bool start)
-    {
-        //save time of left turn
-        //tell player to turn left
-        playerScript.TriggerLeft();
-
-    }
-    public void RightTurn(bool start)
-    {
-        //save time of right turn
-        //tell player to turn right
-        playerScript.TriggerRight();
     }
 
     private void Awake()
@@ -67,18 +53,21 @@ public class GameControllerScript : MonoBehaviour
         //Set path params
         pathCount = paths.transform.childCount;
         currentPathIndex = 0;
-        
+
+        Transform tempPath;
         //Disable irrelevant paths
         for (int i = 1; i < pathCount; i++)
         {
-            paths.transform.GetChild(i).gameObject.SetActive(false);
+            tempPath = paths.transform.GetChild(i);
+            tempPath.gameObject.SetActive(false);
+            tempPath.GetChild(0).GetChild(0).gameObject.GetComponent<PlayerScript>().IsPlayer = false;
         }
 
         //Set path specific params
         SetParams();
 
         //Implement "Start on Touch" functionality
-        startBtn.onClick.AddListener(startGame);
+        startBtn.onClick.AddListener(StartGame);
     }
 
     private void SetParams()
@@ -96,46 +85,54 @@ public class GameControllerScript : MonoBehaviour
         //Input controls
         if (controls.GetLeftDown())
         {
-            LeftTurn(true);
+            playerScript.TriggerLeft(true);
         }
         else if (controls.GetLeftUp())
         {
-            LeftTurn(false);
+            playerScript.TriggerLeft(true);
         }
         if (controls.GetRightDown())
         {
-            RightTurn(true);
+            playerScript.TriggerRight(true);
         }
         else if (controls.GetRightUp())
         {
-            RightTurn(false);
+            playerScript.TriggerRight(true);
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    public void CompletePath()
     {
-        //Reset path
-        playerScript.Pause();
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        playerScript.Pause();
-        CompletePath();
-    }
-
-    void CompletePath()
-    {
-        if(currentPathIndex < pathCount - 1)
+        if(currentPathIndex < pathCount - 1) //Finished the current path but there are more
         {
-            //Disable the end point for the current
-            currentPath.GetChild(2).GetChild(0).gameObject.SetActive(false);
-            //send all saved events to 
-
+            //Handle last played car
+            player.GetComponent<SphereCollider>().gameObject.SetActive(false); //Disable sphere collider to stop collision with end markers
+            currentPath.GetChild(1).gameObject.SetActive(false); //Disable end marker for the completed path
+            playerScript.IsPlayer = false;
+            playerScript.IsGhost = true;
             //move to next path
             currentPathIndex++;
             currentPath = paths.transform.GetChild(currentPathIndex);
             currentPath.gameObject.SetActive(true);
+            player = currentPath.GetChild(0).GetChild(0).gameObject;
+            playerScript = player.GetComponent<PlayerScript>();
+            startBtn.interactable = true;
+            startBtn.gameObject.SetActive(true);
         }
+        else //Finished the level
+        {
+
+        }
+    }
+
+    public void ResetPath()
+    {
+        print("Resetting path for new attempt");
+        foreach(Transform path in paths.transform)
+        {
+            path.GetChild(0).GetChild(0).GetComponent<PlayerScript>().Reset();
+        }
+        startBtn.interactable = true;
+        startBtn.gameObject.SetActive(true);
     }
 }
