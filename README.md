@@ -1,6 +1,12 @@
 # Cars Demo Project
 
-This project is done as a job interview for MobGe. Time limit was 5 days. Meant as a prototype implementation but depending on how much time is left I might implement additional features like menu/UI, animations
+This project is done as a job interview for MobGe. Time limit was 5 days. Meant as a prototype implementation but depending on how much time is left I might implement additional features like menu/UI, animations.
+
+## DESCRIPTION
+
+A top-down car driving game in a city-like environment. There are multiple paths to complete per level and every completed path creates a "ghost car" that replays the movements made by player while the player drives a new car on a new path.
+
+## PROGRESSION DIARY
 
 ### DAY 1
 #### COMPLETED:
@@ -65,3 +71,19 @@ This project is done as a job interview for MobGe. Time limit was 5 days. Meant 
 #### BUGS
 - MOVEMENT
   - Last rotation applied when hitting the end marker is carried over to the new car as default rotation
+  
+### DAY 3 - v1.0 complete
+#### COMPLETED
+- GAMEPLAY
+  - Levels are fully playable
+  - Movement bug fixed
+  - Using Method1 for "Ghost Car" replay
+  - Game area has collidable borders to stop the cars from falling infinitely
+  - Marker shows point of contact instead of object origin
+  - Fixed rotation to be time-based (bugfix)
+  
+#### PLANNED - HIGH PRIORITY
+  - Initial screen / Main menu
+  - Pause menu
+  - Scene management UI / Level selector
+  - Basic SFX
