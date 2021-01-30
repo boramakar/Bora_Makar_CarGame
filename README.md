@@ -2,6 +2,8 @@
 
 This project is done as a job interview for MobGe. Time limit was 5 days. Meant as a prototype implementation but depending on how much time is left I might implement additional features like menu/UI, animations.
 
+Play it on: https://graxur.itch.io/cargame
+
 ## DESCRIPTION
 
 A top-down car driving game in a city-like environment. There are multiple paths to complete per level and every completed path creates a "ghost car" that replays the movements made by player while the player drives a new car on a new path.
