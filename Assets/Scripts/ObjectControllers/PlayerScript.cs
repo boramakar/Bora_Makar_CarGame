@@ -22,6 +22,18 @@ public class PlayerScript : MonoBehaviour
 
     private void Awake()
     {
+        //initialize fields
+        play = false;
+        leftTurn = false;
+        rightTurn = false;
+        movable = true;
+        gameControllerScript = GameObject.Find("GameSettings").GetComponent<GameControllerScript>();
+        savedPositions = new List<Tuple<Vector3, Quaternion>>();
+        savedControls = gameObject.GetComponent<SaveAndReplay>();
+        nextPosition = 1;
+        isPlayer = false;
+
+        //make transparent/fade materials display properly
         foreach (Material mat in gameObject.GetComponent<MeshRenderer>().materials)
         {
             mat.SetInt("_ZWrite", 1);
@@ -31,16 +43,6 @@ public class PlayerScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //initialize fields
-        play = false;
-        leftTurn = false;
-        rightTurn = false;
-        isPlayer = false;
-        movable = true;
-        gameControllerScript = GameObject.Find("GameSettings").GetComponent<GameControllerScript>();
-        savedPositions = new List<Tuple<Vector3, Quaternion>>();
-        savedControls = gameObject.GetComponent<SaveAndReplay>();
-        nextPosition = 1;
 
         //adjust speed calculation formula if needed
         adjustedSpeed = gameControllerScript.playerSpeed / 10f;
@@ -70,7 +72,7 @@ public class PlayerScript : MonoBehaviour
 
             transform.Translate(new Vector3(0, 0, adjustedSpeed) * Time.deltaTime * (movable ? 1 : 0));
             transform.Rotate(0, rotationAmount * Time.deltaTime, 0);
-            print("Total rotation: " + (rotationAmount * Time.deltaTime).ToString("0.000000"));
+            //print("Total rotation: " + (rotationAmount * Time.deltaTime).ToString("0.000000"));
         }
     }
 
@@ -78,6 +80,7 @@ public class PlayerScript : MonoBehaviour
     //This might be very memory intensive, in that case switch to Method 2
     private void FixedUpdate()
     {
+        //Method 1 - Working
         if (play)
         {
             if (isPlayer)
@@ -136,9 +139,10 @@ public class PlayerScript : MonoBehaviour
 
     public void Play()
     {
-        if (isPlayer)
+        //Method 2 - Never tested
+        /*if (isPlayer)
             lastActionTime = Time.time; //record current time as Epoch
-        /*else if (isGhost)
+        else if (isGhost)
         {
             savedControls.PlayInputs();
         }*/
@@ -163,7 +167,7 @@ public class PlayerScript : MonoBehaviour
         gameObject.transform.localRotation = new Quaternion(0, 0, 0, 0);
         if (isPlayer)
         {
-            savedPositions.Clear();
+            this.savedPositions.Clear();
         }
         else
         {

@@ -25,6 +25,7 @@ public class GameControllerScript : MonoBehaviour
     private PlayerScript playerScript;
     private IControlScheme controls;
     private Button startBtn;
+    private Button nextBtn;
 
     // Start is called before the first frame update
     void StartGame()
@@ -37,7 +38,6 @@ public class GameControllerScript : MonoBehaviour
 
     private void Awake()
     {
-        //can be used for pathCount initialization but not necessary
         if (controlType == ControlType.Keyboard)
         {
             controls = new KeyboardControls();
@@ -53,6 +53,7 @@ public class GameControllerScript : MonoBehaviour
         //Set path params
         pathCount = paths.transform.childCount;
         currentPathIndex = 0;
+        SetParams();
 
         Transform tempPath;
         //Disable irrelevant paths
@@ -60,15 +61,14 @@ public class GameControllerScript : MonoBehaviour
         {
             tempPath = paths.transform.GetChild(i);
             tempPath.gameObject.SetActive(false);
-            tempPath.GetChild(0).GetChild(0).gameObject.GetComponent<PlayerScript>().IsPlayer = false;
         }
-
-        //Set path specific params
-        SetParams();
 
         //Implement "Start on Touch" functionality
         startBtn = mainCamera.transform.GetChild(0).GetChild(0).GetChild(0).gameObject.GetComponent<Button>();
+        nextBtn = mainCamera.transform.GetChild(0).GetChild(0).GetChild(1).gameObject.GetComponent<Button>();
         startBtn.onClick.AddListener(StartGame);
+        nextBtn.onClick.AddListener(NextLevel);
+        nextBtn.gameObject.SetActive(false);
     }
 
     private void SetParams()
@@ -124,6 +124,7 @@ public class GameControllerScript : MonoBehaviour
             MakeGhost();
             ResetPath();
             StartCoroutine(EndOfLevelReplay());
+            nextBtn.gameObject.SetActive(true);
         }
     }
 
@@ -165,10 +166,17 @@ public class GameControllerScript : MonoBehaviour
         }
     }
 
-    void nextScene()
+    void NextLevel()
     {
         //Scene Animation
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1); //Load next scene
+        if(SceneManager.GetActiveScene().buildIndex < SceneManager.sceneCountInBuildSettings - 1)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1); //Load next scene
+        }
+        else
+        {
+            print("End of demo!");
+        }
     }
 
     void DisplayMenu()
