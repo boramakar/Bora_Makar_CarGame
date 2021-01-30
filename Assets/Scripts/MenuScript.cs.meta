@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 527c83d928fae1c419b8fbe6fd115ec5
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - views: {instanceID: 0}
+  - underlinePrefab: {fileID: 5482418057427648482, guid: 88b8c8db8355d134da9027b3d7f7bd07,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

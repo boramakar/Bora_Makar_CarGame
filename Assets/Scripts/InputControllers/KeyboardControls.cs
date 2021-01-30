@@ -3,13 +3,17 @@ using UnityEngine;
 
 public class KeyboardControls : IControlScheme
 {
-    private readonly KeyCode leftKey, rightKey;
-
-    public KeyboardControls()
-    {
+    private static readonly KeyboardControls instance = new KeyboardControls();
+    private KeyboardControls() {
         leftKey = KeyCode.LeftArrow;
         rightKey = KeyCode.RightArrow;
     }
+    static KeyboardControls() { }
+
+    public static KeyboardControls Instance { get { return instance; } }
+
+    private readonly KeyCode leftKey, rightKey;
+
     public bool GetLeftDown()
     {
         if (Input.GetKeyDown(leftKey))

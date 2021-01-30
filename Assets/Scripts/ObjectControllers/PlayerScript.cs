@@ -6,8 +6,6 @@ public class PlayerScript : MonoBehaviour
 {
     private bool leftTurn, rightTurn;
     private static bool play; //if any car is playing, then all of them are playing
-    private float adjustedSpeed, adjustedRotationSpeed;
-    private GameControllerScript gameControllerScript;
     private List<Tuple<Vector3, Quaternion>> savedPositions;
     private SaveAndReplay savedControls;
     private int nextPosition;
@@ -16,6 +14,7 @@ public class PlayerScript : MonoBehaviour
     private bool movable;
     private float lastActionTime;
     private float rotationAmount;
+    private DataScript dataScript;
 
     public bool IsPlayer { get => isPlayer; set => isPlayer = value; }
     public bool IsGhost { get => isGhost; set => isGhost = value; }
@@ -27,11 +26,11 @@ public class PlayerScript : MonoBehaviour
         leftTurn = false;
         rightTurn = false;
         movable = true;
-        gameControllerScript = GameObject.Find("GameSettings").GetComponent<GameControllerScript>();
         savedPositions = new List<Tuple<Vector3, Quaternion>>();
         savedControls = gameObject.GetComponent<SaveAndReplay>();
         nextPosition = 1;
         isPlayer = false;
+        dataScript = DataScript.Instance;
 
         //make transparent/fade materials display properly
         foreach (Material mat in gameObject.GetComponent<MeshRenderer>().materials)
@@ -43,11 +42,6 @@ public class PlayerScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
-        //adjust speed calculation formula if needed
-        adjustedSpeed = gameControllerScript.playerSpeed / 10f;
-        adjustedRotationSpeed = gameControllerScript.playerTurnSpeed * 10f;
-
         //DEBUG
         /*print("Speed: " + canvasScript.playerSpeed.ToString());
         print("AdjustedSpeed: " + adjustedSpeed.ToString());
@@ -63,14 +57,14 @@ public class PlayerScript : MonoBehaviour
             rotationAmount = 0;
             if (leftTurn)
             {
-                rotationAmount -= adjustedRotationSpeed;
+                rotationAmount -= dataScript.RotationSpeed;
             }
             if (rightTurn)
             {
-                rotationAmount += adjustedRotationSpeed;
+                rotationAmount += dataScript.RotationSpeed;
             }
 
-            transform.Translate(new Vector3(0, 0, adjustedSpeed) * Time.deltaTime * (movable ? 1 : 0));
+            transform.Translate(new Vector3(0, 0, dataScript.MovementSpeed) * Time.deltaTime * (movable ? 1 : 0));
             transform.Rotate(0, rotationAmount * Time.deltaTime, 0);
             //print("Total rotation: " + (rotationAmount * Time.deltaTime).ToString("0.000000"));
         }

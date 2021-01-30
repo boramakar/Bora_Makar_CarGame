@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-interface IControlScheme
+public interface IControlScheme
 {
     bool GetLeftDown();
     bool GetLeftUp();

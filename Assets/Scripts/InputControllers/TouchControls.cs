@@ -3,13 +3,15 @@ using UnityEngine;
 
 public class TouchControls : IControlScheme
 {
-    public TouchControls()
-    {
-        //nothing to do here yet
-    }
+    private static readonly TouchControls instance = new TouchControls();
+    private TouchControls() { }
+    static TouchControls() { }
+
+    public static TouchControls Instance { get { return instance; } }
     public bool GetLeftDown()
     {
-        if (Input.touchCount > 0) {
+        if (Input.touchCount > 0)
+        {
             foreach (Touch touch in Input.touches)
             {
                 if (touch.phase == TouchPhase.Began && touch.position.x < Screen.width / 2)
