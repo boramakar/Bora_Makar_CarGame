@@ -33,6 +33,19 @@ public class DataInitScript : MonoBehaviour
             instance.HardMovementSpeed = hardMovementSpeed;
             instance.HardRotationSpeed = hardRotationSpeed;
             instance.SetDifficulty();
+
+            if(SystemInfo.deviceType == DeviceType.Desktop)
+            {
+                instance.CurrentControlType = ControlType.keyboard;
+            }
+            else if(SystemInfo.deviceType == DeviceType.Handheld)
+            {
+                instance.CurrentControlType = ControlType.touch;
+            }
+            else if(SystemInfo.deviceType == DeviceType.Console)
+            {
+                //Console controls not implemented
+            }
         }
     }
 }
