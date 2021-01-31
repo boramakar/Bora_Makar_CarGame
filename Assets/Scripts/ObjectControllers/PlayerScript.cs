@@ -153,15 +153,15 @@ public class PlayerScript : MonoBehaviour
         movable = false;
     }
 
-    public void Reset()
+    public void Reset(bool force)
     {
         leftTurn = false;
         rightTurn = false;
         gameObject.transform.localPosition = new Vector3(0, 0, 0);
         gameObject.transform.localRotation = new Quaternion(0, 0, 0, 0);
-        if (isPlayer)
+        if ((isPlayer || force) && savedPositions != null)
         {
-            this.savedPositions.Clear();
+            savedPositions.Clear();
         }
         else
         {
