@@ -19,6 +19,7 @@ public class CarCollisionScript : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        print("We collided with a " + LayerMask.LayerToName(collision.gameObject.layer));
         if (collision.gameObject.layer == LayerMask.NameToLayer("Collision"))
         {
             StartCoroutine(WaitAndReset(collision));
@@ -29,7 +30,7 @@ public class CarCollisionScript : MonoBehaviour
         }
         else
         {
-            print("We collided with a " + LayerMask.LayerToName(collision.gameObject.layer));
+            print("Not handling this collision");
         }
     }
 

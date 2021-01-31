@@ -18,7 +18,6 @@ public class PauseMenuScript : MonoBehaviour
     void Start()
     {
         gameControllerScript = gameController.GetComponent<GameControllerScript>();
-        playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerScript>();
         pauseBtn = gameObject.transform.GetChild(0).GetComponent<Button>();
         overlay = gameObject.transform.GetChild(1).gameObject;
         continueBtn = overlay.transform.GetChild(0).GetComponent<Button>();
@@ -29,24 +28,19 @@ public class PauseMenuScript : MonoBehaviour
         continueBtn.onClick.AddListener(ContinueGame);
         resetLevelBtn.onClick.AddListener(ResetLevel);
         mainMenuBtn.onClick.AddListener(MainMenu);
+        overlay.SetActive(false);
     }
 
     void PauseGame()
     {
         overlay.SetActive(true);
-        playerScript.Pause();
+        gameControllerScript.Pause();
     }
 
     void ContinueGame()
     {
         overlay.SetActive(false);
-        StartCoroutine(UnpauseGame());
-    }
-
-    IEnumerator UnpauseGame()
-    {
-        yield return new WaitForSeconds(1);
-        playerScript.Play();
+        gameControllerScript.Continue();
     }
 
     void ResetLevel()

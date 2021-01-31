@@ -26,14 +26,16 @@ public class GameControllerScript : MonoBehaviour
 
     void Start()
     {
-        //Implement "Start on Touch" functionality
+        //Implement button functionality
         startBtn = mainCamera.transform.GetChild(0).GetChild(0).GetChild(0).gameObject.GetComponent<Button>();
         nextBtn = mainCamera.transform.GetChild(0).GetChild(0).GetChild(1).gameObject.GetComponent<Button>();
         startBtn.onClick.AddListener(StartGame);
         nextBtn.onClick.AddListener(NextLevel);
         nextBtn.gameObject.SetActive(false);
 
-        ResetLevel();
+        //ResetLevel();
+        SetParams();
+        DisablePaths(1);
     }
 
     // Update is called once per frame
@@ -79,6 +81,20 @@ public class GameControllerScript : MonoBehaviour
         playerScript.Play();
     }
 
+    public void Pause()
+    {
+        print("Paused the game!");
+        startBtn.interactable = false;
+        //startBtn.gameObject.SetActive(false);
+        playerScript.Pause();
+    }
+
+    public void Continue()
+    {
+        print("Continuing the game now!");
+        startBtn.interactable = true;
+    }
+
     public void CompletePath()
     {
         if (currentPathIndex < pathCount - 1) //Finished the current path but there are more
@@ -113,24 +129,28 @@ public class GameControllerScript : MonoBehaviour
     {
         print("Resetting level for new attempt");
         currentPathIndex = 0;
+        DisablePaths(1);
         ResetCars(true);
         SetParams();
-        DisablePaths(1);
         startBtn.interactable = true;
         //startBtn.gameObject.SetActive(true);
     }
     public void ResetCars(bool hardReset)
     {
         GameObject currentCar;
-        foreach (Transform path in paths.transform)
+        for(int index = 0; index < (hardReset ? paths.transform.childCount : currentPathIndex + 1); index++)
         {
+            Transform path = paths.transform.GetChild(index);
             currentCar = path.GetChild(0).GetChild(0).gameObject;
-            path.GetChild(0).GetChild(0).GetComponent<PlayerScript>().Reset(hardReset);
+            currentCar.GetComponent<PlayerScript>().Reset(hardReset);
             if(hardReset)
             {
                 path.GetChild(1).gameObject.SetActive(true); //enable markers
                 currentCar.GetComponent<SphereCollider>().enabled = true; //Re-enable sphere collider for collision with end markers
-                currentCar.AddComponent<CarCollisionScript>(); //add collision script back
+                if (currentCar.TryGetComponent<CarCollisionScript>(out _) == false)
+                {
+                    currentCar.AddComponent<CarCollisionScript>(); //add collision script back
+                }
                 //Disable end marker for the completed path
                 currentCar.transform.GetChild(0).gameObject.SetActive(true); //Re-enable lights for ghosts
                 foreach (Material mat in currentCar.GetComponent<MeshRenderer>().materials) //Turn car color back to normal
@@ -196,6 +216,6 @@ public class GameControllerScript : MonoBehaviour
 
     void DisplayMenu()
     {
-        pauseMenu.SetActive(true);
+        pauseMenu.transform.GetChild(1).gameObject.SetActive(true);
     }
 }

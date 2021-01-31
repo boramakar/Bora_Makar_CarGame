@@ -15,21 +15,24 @@ public class DataInitScript : MonoBehaviour
     public float hardMovementSpeed;
     public float hardRotationSpeed;
 
-    private void Start()
+    private void Awake()
     {
         DataScript instance = DataScript.Instance;
 
-        instance.SFXEnabled = sfxEnabled;
-        instance.MusicEnabled = musicEnabled;
-        instance.CurrentControlType = controlType;
-        instance.CurrentDifficulty = difficulty;
-        instance.GFXQuality = graphicsQuality;
-        instance.EasyMovementSpeed = easyMovementSpeed;
-        instance.EasyRotationSpeed = easyRotationSpeed;
-        instance.NormalMovementSpeed = normalMovementSpeed;
-        instance.NormalRotationSpeed = normalRotationSpeed;
-        instance.HardMovementSpeed = hardMovementSpeed;
-        instance.HardRotationSpeed = hardRotationSpeed;
-        instance.SetDifficulty();
+        if (instance.MovementSpeed == 0) //Prevent resetting user settings when returning to main menu
+        {
+            instance.SFXEnabled = sfxEnabled;
+            instance.MusicEnabled = musicEnabled;
+            instance.CurrentControlType = controlType;
+            instance.CurrentDifficulty = difficulty;
+            instance.GFXQuality = graphicsQuality;
+            instance.EasyMovementSpeed = easyMovementSpeed;
+            instance.EasyRotationSpeed = easyRotationSpeed;
+            instance.NormalMovementSpeed = normalMovementSpeed;
+            instance.NormalRotationSpeed = normalRotationSpeed;
+            instance.HardMovementSpeed = hardMovementSpeed;
+            instance.HardRotationSpeed = hardRotationSpeed;
+            instance.SetDifficulty();
+        }
     }
 }
