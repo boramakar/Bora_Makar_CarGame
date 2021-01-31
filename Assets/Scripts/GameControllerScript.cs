@@ -17,11 +17,13 @@ public class GameControllerScript : MonoBehaviour
     private IControlScheme controls;
     private Button startBtn;
     private Button nextBtn;
+    private bool replayMode;
 
     private void Awake()
     {
         controls = ControlManager.Instance.controlScheme;
         pathCount = paths.transform.childCount;
+        replayMode = false;
     }
 
     void Start()
@@ -112,6 +114,7 @@ public class GameControllerScript : MonoBehaviour
         {
             MakeGhost();
             ResetPath();
+            replayMode = true;
             StartCoroutine(EndOfLevelReplay());
             nextBtn.gameObject.SetActive(true);
         }
@@ -128,6 +131,7 @@ public class GameControllerScript : MonoBehaviour
     public void ResetLevel()
     {
         print("Resetting level for new attempt");
+        replayMode = false;
         currentPathIndex = 0;
         DisablePaths(1);
         ResetCars(true);
@@ -193,7 +197,7 @@ public class GameControllerScript : MonoBehaviour
 
     IEnumerator EndOfLevelReplay()
     {
-        while (true)
+        while (replayMode)
         {
             playerScript.Play();
             yield return new WaitForSeconds(5); //Duration of replay

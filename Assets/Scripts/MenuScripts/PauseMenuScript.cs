@@ -45,6 +45,7 @@ public class PauseMenuScript : MonoBehaviour
 
     void ResetLevel()
     {
+        overlay.SetActive(false);
         gameControllerScript.ResetLevel();
     }
 
