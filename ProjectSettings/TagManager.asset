@@ -4,7 +4,8 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Obstacle
+  - Marker
+  - Collision
   - Terrain
   layers:
   - Default
@@ -14,10 +15,10 @@ TagManager:
   - Water
   - UI
   - 
-  - Terrain
+  - 
   - Collision
   - Marker
-  - 
+  - Terrain
   - 
   - 
   - 

@@ -15,6 +15,7 @@ public class CarCollisionScript : MonoBehaviour
     {
         collisionMarker = GameObject.Find("CollisionMarker").gameObject;
         gameControllerScript = GameObject.Find("GameController").GetComponent<GameControllerScript>();
+        collisionMarker.transform.position = new Vector3(0, -1, 0);
     }
 
     private void OnCollisionEnter(Collision collision)

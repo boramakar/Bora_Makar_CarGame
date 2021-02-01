@@ -28,6 +28,7 @@ public class GameControllerScript : MonoBehaviour
 
     void Start()
     {
+        print("GameControllerScript Start");
         //Implement button functionality
         startBtn = mainCamera.transform.GetChild(0).GetChild(0).GetChild(0).gameObject.GetComponent<Button>();
         nextBtn = mainCamera.transform.GetChild(0).GetChild(0).GetChild(1).gameObject.GetComponent<Button>();

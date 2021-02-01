@@ -1,22 +1,26 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using System.Collections;
 
 public class PauseMenuScript : MonoBehaviour
 {
-    public GameObject gameController;
-
+    private GameObject gameController;
     private Button pauseBtn;
     private Button continueBtn;
     private Button resetLevelBtn;
     private Button mainMenuBtn;
     private GameObject overlay;
     private GameControllerScript gameControllerScript;
-    private PlayerScript playerScript;
+
+    private void Awake()
+    {
+        gameController = GameObject.Find("GameController").gameObject;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
+        print("Pause menu start");
         gameControllerScript = gameController.GetComponent<GameControllerScript>();
         pauseBtn = gameObject.transform.GetChild(0).GetComponent<Button>();
         overlay = gameObject.transform.GetChild(1).gameObject;
